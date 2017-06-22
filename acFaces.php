@@ -15,23 +15,23 @@ else
 
 if ($action == 'add')
 {
-    if (empty($_POST['name']) || empty($_POST['img']))
+    if (empty($_POST['name']) || empty($_POST['image']))
     {
-        $msg = '&Eacute; necess&aacute;rio informar os par&acirc;metros "name" e "img" via POST.';
+        $msg = '&Eacute; necess&aacute;rio informar os par&acirc;metros "name" e "image" via POST.';
         notify::showMsg($msg,'danger',$back);
         die();
     }
 
     $back = 'faces.php';
     $name = $_POST['name'];
-    $img = $_POST['img'];
+    $image = $_POST['image'];
 
     try
     {
         $face = new faces($dbFile);
         $face->setName($name);
-        $face->setImg($img);
-        $user->add();
+        $face->setImg($image);
+        $face->add();
     }
     catch (Exception $e)
     {

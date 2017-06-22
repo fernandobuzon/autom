@@ -916,6 +916,37 @@ class faces extends database
         $db->close();
     }
 
+    public function add()
+    {
+        if (empty($this->name))
+        {
+            $msg = 'Antes de adicionar, adicione um nome com o m&eacute;todo setName.';
+            throw new Exception("$msg");
+        }
+
+        if (empty($this->img))
+        {
+            $msg = 'Antes de adicionar, adicione uma imagem com o m&eacute;todo setImg.';
+            throw new Exception("$msg");
+        }
+
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("insert into faces ('name','img') values (?,?)");
+        $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
+        $stmt->bindValue(2, $this->img, SQLITE3_BLOB);
+
+        if (! $stmt->execute())
+        {
+            $msg = $db->lastErrorMsg();
+            $db->close();
+
+            throw new Exception("$msg");
+        }
+
+        $db->close();
+    }
+
     public function getAll()
     {
         $db = new SQLite3(parent::getDbFile());
@@ -955,6 +986,21 @@ class faces extends database
         else
         {
             $msg = 'O "id" deve ser um valor num&eacute;rico.';
+            throw new Exception("$msg");
+        }
+    }
+
+    public function setImg($img)
+    {
+        if (!empty($img))
+        {
+            $data = explode(',', $img);
+            $data = base64_decode($data[1]);
+            $this->img = $data;
+        }
+        else
+        {
+            $msg = 'A imagem n&atilde;o pode ser nula.';
             throw new Exception("$msg");
         }
     }

@@ -277,6 +277,44 @@ function edit(id)
     });
 };
 
+function add()
+{
+    var comp;
+    var permissions;
+    var formc = $('#form1 *').filter(':checkbox');
+    for (var i = 0, l = formc.length; i < l; i++) {
+        comp = '#' + formc[i].name;
+        if ($(comp).is(":checked")) {
+            if ( i == 0 ) {
+                permissions = formc[i].name;
+            } else {
+                permissions += ':' + formc[i].name;
+            };
+        };
+    }
+
+    var form;
+    form = new FormData();
+    form.append('action', 'add');
+    form.append('name', $('#name').val());
+    form.append('permissions', permissions);
+    form.append('image',$('#transfer').val());
+
+    $.ajax({
+        url: 'acFaces.php',
+        data: form,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        cache: false,
+        success: function (data) {
+            $('#details').html("");
+            $('#pageBox').html("");
+            $('#pageBox').append(data);
+        }
+    });
+};
+
 function del(id)
 {
     var r = confirm("Tem certeza que deseja remover o id nr: " + id);
