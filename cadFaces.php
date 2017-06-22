@@ -53,22 +53,31 @@ else
 
 <?php
 
-foreach($faces as $f)
+if (is_numeric($_GET['id']))
 {
-    if ($f['id'] == $id)
+    foreach($faces as $f)
     {
-        echo '<div class="active item" data-slide-number="' . $f['id'] . '">';
-        echo '  <img src="img.php?id=' . $f['id'] . '&class=faces">';
-        echo '</div>';
-    }
-    else
-    {
-        echo '<div class="item" data-slide-number="' . $f['id'] . '">';
-        echo '  <img src="img.php?id=' . $f['id'] . '&class=faces">';
-        echo '</div>';
-    }
+        if ($f['id'] == $id)
+        {
+            echo '<div class="active item" data-slide-number="' . $f['id'] . '">';
+            echo '  <img src="img.php?id=' . $f['id'] . '&class=faces">';
+            echo '</div>';
+        }
+        else
+        {
+            echo '<div class="item" data-slide-number="' . $f['id'] . '">';
+            echo '  <img src="img.php?id=' . $f['id'] . '&class=faces">';
+            echo '</div>';
+        }
 
-    echo '<div id="carousel-text" name="carousel-text" class="carousel-caption" style="top: 0; bottom: auto;">';
+        echo '<div id="carousel-text" name="carousel-text" class="carousel-caption" style="top: 0; bottom: auto;">';
+        echo '</div>';
+    }
+}
+else
+{
+    echo '<div class="active item" data-slide-number="0">';
+    echo '  <img id="newimage" class="faces" src="">';
     echo '</div>';
 }
 
@@ -129,7 +138,7 @@ else
 
                                     <div class="form-group">
                                         <button type="button" class="btn btn-default" id="btnSave" name="btnSave" onclick="<?php echo $func; ?>"><?php echo $label; ?></button>
-                                        <button type="button" class="btn btn-default" id="btnCancel" name="btnCancel" onclick="populate('faces.php')">Cancelar</button>
+                                        <button type="button" class="btn btn-default" id="btnCancel" name="btnCancel" onclick="populate('faces.php')">Voltar</button>
                                     </div>
                                 </form>
                             </div>
@@ -142,6 +151,7 @@ else
 </div>
 
 <script>
+
 
 var id = $('.item.active').data('slide-number');
 var form;
@@ -292,6 +302,8 @@ function del(id)
         });
     }
 };
+
+document.getElementById('newimage').setAttribute('src', $('#transfer').val());
 
 </script>
 

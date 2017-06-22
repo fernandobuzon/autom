@@ -78,6 +78,10 @@
       </div>
     </nav>
 
+    <form name="formT" id="formT">
+        <input type="hidden" id="transfer" name="transfer" value="<?php echo $_POST['image']; ?>">
+    </form>
+
     <div id="pageBox" class="container theme-showcase" role="main"></div>
     <div id="details" class="container theme-showcase" role="main"></div>
 
@@ -114,7 +118,7 @@
         if (empty($_GET['page']))
         {
             //echo 'populate("home.php");';
-            echo 'populate("home.php");';
+            echo 'populate("cam.php");';
         }
         else
         {

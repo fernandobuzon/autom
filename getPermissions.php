@@ -11,30 +11,33 @@ else
     die();
 }
 
-try
+if ($id > 0)
 {
-    $name = new faces($dbFile);
-    $name->setId($id);
-    $name->load();
-    $name = $name->getName();
+    try
+    {
+        $name = new faces($dbFile);
+        $name->setId($id);
+        $name->load();
+        $name = $name->getName();
 
-    $permissions = new faces($dbFile);
-    $permissions->setId($id);
-    $permissions = $permissions->getPermissions();
-}
-catch (Exception $e)
-{
-    $msg = $e->getMessage();
-    notify::showMsg($msg,'danger','faces.php');
-    die(); 
-}
+        $permissions = new faces($dbFile);
+        $permissions->setId($id);
+        $permissions = $permissions->getPermissions();
+    }
+    catch (Exception $e)
+    {
+        $msg = $e->getMessage();
+        notify::showMsg($msg,'danger','faces.php');
+        die(); 
+    }
 
-if (empty($permissions))
-{
-    echo $name;
-}
-else
-{
-    echo $name . ':' . $permissions;
+    if (empty($permissions))
+    {
+        echo $name;
+    }
+    else
+    {
+        echo $name . ':' . $permissions;
+    }
 }
 ?>

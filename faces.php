@@ -90,7 +90,7 @@ foreach($faces as $f)
             <div class="col-sm-6" id="slider-thumbs">
                 <!-- Bottom switcher of slider -->
                 <div class="row">
-                    <center><button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="populate('cadFaces.php');">Nova Face</button></center>
+                    <center><button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="populate('cam.php');">Nova Face</button></center>
                 </div>
                 <ul class="hide-bullets">
 
