@@ -781,7 +781,7 @@ class faces extends database
     {
         if (empty($this->id))
         {
-            $msg = 'Antes de checar as permiss&otilde;es, sete o "id" com o m&eacute;todo setId.';
+            $msg = 'Antes de setar as permiss&otilde;es, sete o "id" com o m&eacute;todo setId.';
             throw new Exception("$msg");
         }
 
@@ -986,6 +986,27 @@ class faces extends database
         else
         {
             $msg = 'O "id" deve ser um valor num&eacute;rico.';
+            throw new Exception("$msg");
+        }
+    }
+
+    public function findId()
+    {
+        if (!empty($this->name))
+        {
+            $db = new SQLite3(parent::getDbFile());
+
+            $stmt = $db->prepare('SELECT id from faces where name = ?');
+            $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
+            $result = $stmt->execute();
+            $row = $result->fetchArray(SQLITE3_NUM);
+            $db->close();
+
+            return $row[0];
+        }
+        else
+        {
+            $msg = 'Antes de procurar um "id" de uma face, &eacute; necess&aacute;rio carregar ou adicionar algum registro.';
             throw new Exception("$msg");
         }
     }

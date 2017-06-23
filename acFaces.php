@@ -25,6 +25,7 @@ if ($action == 'add')
     $back = 'faces.php';
     $name = $_POST['name'];
     $image = $_POST['image'];
+    $permissions = $_POST['permissions'];
 
     try
     {
@@ -32,6 +33,11 @@ if ($action == 'add')
         $face->setName($name);
         $face->setImg($image);
         $face->add();
+
+        $id = $face->findId();
+        $face->setId($id);
+
+        $face->setPermissions($permissions);
     }
     catch (Exception $e)
     {
