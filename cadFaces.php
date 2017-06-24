@@ -152,7 +152,6 @@ else
 
 <script>
 
-
 var id = $('.item.active').data('slide-number');
 var form;
 form = new FormData();

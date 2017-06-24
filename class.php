@@ -673,6 +673,46 @@ class doors extends database
         parent::setDbFile($dbFile);
     }
 
+    public function setCameras($cameras)
+    {
+        if (empty($this->id))
+        {
+            $msg = 'Antes de setar as c&acirc;meras, sete o "id" com o m&eacute;todo setId.';
+            throw new Exception("$msg");
+        }
+
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("update cameras set door_id = null where door_id = ?");
+        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
+        if (! $stmt->execute())
+        {
+            $msg = $db->lastErrorMsg();
+            $db->close();
+
+            throw new Exception("$msg");
+        }
+
+        $cameras = explode(':', $cameras);
+        foreach ($cameras as $camera)
+        {
+            $camera_id = str_replace('camera','',$camera);
+
+            $stmt = $db->prepare("update cameras set door_id = ? where id = ?");
+            $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
+            $stmt->bindValue(2, $camera_id, SQLITE3_INTEGER);
+            if (! $stmt->execute())
+            {
+                $msg = $db->lastErrorMsg();
+                $db->close();
+
+                throw new Exception("$msg");
+            }
+        }
+
+        $db->close();
+    }
+
     public function del()
     {
         if (empty($this->id))
@@ -682,6 +722,17 @@ class doors extends database
         }
 
         $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("update cameras set door_id = null where door_id = ?");
+        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
+
+        if (! $stmt->execute())
+        {
+            $msg = $db->lastErrorMsg();
+            $db->close();
+
+            throw new Exception("$msg");
+        }
 
         $stmt = $db->prepare("delete from doors where id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
@@ -715,6 +766,85 @@ class doors extends database
         $this->name = $row['name'];
 
         $db->close();
+    }
+
+    public function save()
+    {
+        if (empty($this->id))
+        {
+            $msg = 'Antes de salvar, carregue alguma porta com o m&eacute;todo load.';
+            throw new Exception("$msg");
+        }
+
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("update doors set name = ? where id = ?");
+        $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
+        $stmt->bindValue(2, $this->id, SQLITE3_INTEGER);
+
+        if (! $stmt->execute())
+        {
+            $msg = $db->lastErrorMsg();
+            $db->close();
+
+            throw new Exception("$msg");
+        }
+
+        $db->close();
+    }
+
+    public function add()
+    {
+        if (empty($this->name))
+        {
+            $msg = 'Antes de adicionar, adicione um nome com o m&eacute;todo setName.';
+            throw new Exception("$msg");
+        }
+
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("insert into doors ('name') values (?)");
+        $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
+
+        if (! $stmt->execute())
+        {
+            $msg = $db->lastErrorMsg();
+            $db->close();
+
+            throw new Exception("$msg");
+        }
+
+        $db->close();
+    }
+
+    public function getCameras()
+    {
+        if (empty($this->id))
+        {
+            $msg = 'Antes de checar as c&acirc;meras, sete o "id" com o m&eacute;todo setId.';
+            throw new Exception("$msg");
+        }
+
+        $db = new SQLite3(parent::getDbFile());
+        $stmt = $db->prepare('select id from cameras where door_id = ?');
+        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+        while ($row = $result->fetchArray(SQLITE3_ASSOC))
+        {
+            $cameras[] = $row['id'];
+        }
+        $db->close();
+
+        if (!empty($cameras))
+        {
+            $cameras = implode(':',$cameras);
+            return $cameras;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public function getAll()
@@ -756,6 +886,40 @@ class doors extends database
         else
         {
             $msg = 'O "id" deve ser um valor num&eacute;rico.';
+            throw new Exception("$msg");
+        }
+    }
+
+    public function findId()
+    {
+        if (!empty($this->name))
+        {
+            $db = new SQLite3(parent::getDbFile());
+
+            $stmt = $db->prepare('SELECT id from doors where name = ?');
+            $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
+            $result = $stmt->execute();
+            $row = $result->fetchArray(SQLITE3_NUM);
+            $db->close();
+
+            return $row[0];
+        }
+        else
+        {
+            $msg = 'Antes de procurar o "id" de uma porta, &eacute; necess&aacute;rio carregar ou adicionar algum registro.';
+            throw new Exception("$msg");
+        }
+    }
+
+    public function setName($name)
+    {
+        if (!empty($name))
+        {
+            $this->name = $name;
+        }
+        else
+        {
+            $msg = 'O nome n&atilde;o pode ser nulo.';
             throw new Exception("$msg");
         }
     }
@@ -1006,7 +1170,7 @@ class faces extends database
         }
         else
         {
-            $msg = 'Antes de procurar um "id" de uma face, &eacute; necess&aacute;rio carregar ou adicionar algum registro.';
+            $msg = 'Antes de procurar o "id" de uma face, &eacute; necess&aacute;rio carregar ou adicionar algum registro.';
             throw new Exception("$msg");
         }
     }

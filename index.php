@@ -58,7 +58,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cadastro <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="?page=faces.php">Faces</a></li>
-                <li><a href="#">Portas</a></li>
+                <li><a href="?page=doors.php">Portas</a></li>
                 <li><a href="#">C&acirc;meras</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="?page=users.php">Usu&aacute;rios</a></li>
@@ -117,8 +117,7 @@
       <?php
         if (empty($_GET['page']))
         {
-            //echo 'populate("home.php");';
-            echo 'populate("cam.php");';
+            echo 'populate("home.php");';
         }
         else
         {
