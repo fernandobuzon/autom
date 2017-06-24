@@ -59,7 +59,7 @@
               <ul class="dropdown-menu">
                 <li><a href="?page=faces.php">Faces</a></li>
                 <li><a href="?page=doors.php">Portas</a></li>
-                <li><a href="#">C&acirc;meras</a></li>
+                <li><a href="?page=cameras.php">C&acirc;meras</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="?page=users.php">Usu&aacute;rios</a></li>
               </ul>

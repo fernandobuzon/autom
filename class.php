@@ -349,6 +349,83 @@ class cameras extends database
         $db->close();
     }
 
+    public function add()
+    {
+        if (empty($this->name) || empty($this->netcam_url))
+        {
+            $msg = 'Antes de adicionar, adicione um nome e o netcam_url.';
+            throw new Exception("$msg");
+        }
+
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("insert into cameras ('name','netcam_url','netcam_userpass','v4l2_palette','norm','width','height','framerate','minimum_frame_time','netcam_keepalive','auto_brightness','brightness','contrast','saturation','hue') values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
+        $stmt->bindValue(2, $this->netcam_url, SQLITE3_TEXT);
+        $stmt->bindValue(3, $this->netcam_userpass, SQLITE3_TEXT);
+        $stmt->bindValue(4, $this->v4l2_palette, SQLITE3_INTEGER);
+        $stmt->bindValue(5, $this->norm, SQLITE3_INTEGER);
+        $stmt->bindValue(6, $this->width, SQLITE3_INTEGER);
+        $stmt->bindValue(7, $this->height, SQLITE3_INTEGER);
+        $stmt->bindValue(8, $this->framerate, SQLITE3_INTEGER);
+        $stmt->bindValue(9, $this->minimum_frame_time, SQLITE3_INTEGER);
+        $stmt->bindValue(10, $this->netcam_keepalive, SQLITE3_INTEGER);
+        $stmt->bindValue(11, $this->auto_brightness, SQLITE3_INTEGER);
+        $stmt->bindValue(12, $this->brightness, SQLITE3_INTEGER);
+        $stmt->bindValue(13, $this->contrast, SQLITE3_INTEGER);
+        $stmt->bindValue(14, $this->saturation, SQLITE3_INTEGER);
+        $stmt->bindValue(15, $this->hue, SQLITE3_INTEGER);
+
+        if (! $stmt->execute())
+        {
+            $msg = $db->lastErrorMsg();
+            $db->close();
+
+            throw new Exception("$msg");
+        }
+
+        $db->close();
+    }
+
+    public function save()
+    {
+        if (empty($this->id))
+        {
+            $msg = 'Antes de salvar, carregue alguma c&acirc;mera com o m&eacute;todo load.';
+            throw new Exception("$msg");
+        }
+
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("update cameras set 'name' = ?, 'netcam_url' = ?, 'netcam_userpass' = ?, 'v4l2_palette' = ?, 'norm' = ?, 'width' = ?, 'height' = ?, 'framerate' = ?, 'minimum_frame_time' = ?, 'netcam_keepalive' = ?, 'auto_brightness' = ?, 'brightness' = ?, 'contrast' = ?, 'saturation' = ?, 'hue' = ? where id = ?");
+        $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
+        $stmt->bindValue(2, $this->netcam_url, SQLITE3_TEXT);
+        $stmt->bindValue(3, $this->netcam_userpass, SQLITE3_TEXT);
+        $stmt->bindValue(4, $this->v4l2_palette, SQLITE3_INTEGER);
+        $stmt->bindValue(5, $this->norm, SQLITE3_INTEGER);
+        $stmt->bindValue(6, $this->width, SQLITE3_INTEGER);
+        $stmt->bindValue(7, $this->height, SQLITE3_INTEGER);
+        $stmt->bindValue(8, $this->framerate, SQLITE3_INTEGER);
+        $stmt->bindValue(9, $this->minimum_frame_time, SQLITE3_INTEGER);
+        $stmt->bindValue(10, $this->netcam_keepalive, SQLITE3_INTEGER);
+        $stmt->bindValue(11, $this->auto_brightness, SQLITE3_INTEGER);
+        $stmt->bindValue(12, $this->brightness, SQLITE3_INTEGER);
+        $stmt->bindValue(13, $this->contrast, SQLITE3_INTEGER);
+        $stmt->bindValue(14, $this->saturation, SQLITE3_INTEGER);
+        $stmt->bindValue(15, $this->hue, SQLITE3_INTEGER);
+        $stmt->bindValue(16, $this->id, SQLITE3_INTEGER);
+
+        if (! $stmt->execute())
+        {
+            $msg = $db->lastErrorMsg();
+            $db->close();
+
+            throw new Exception("$msg");
+        }
+
+        $db->close();
+    }
+
     public function getAll()
     {
         $db = new SQLite3(parent::getDbFile());
@@ -425,23 +502,7 @@ class cameras extends database
     {
         if (!empty($name))
         {
-            $db = new SQLite3(parent::getDbFile());
-
-            $stmt = $db->prepare('SELECT count(1) from cameras where name = ?');
-            $stmt->bindValue(1, $name, SQLITE3_TEXT);
-            $result = $stmt->execute();
-            $row = $result->fetchArray(SQLITE3_NUM);
-            $db->close();
-
-            if ($row[0] == 0)
-            {
-                $this->name = $name;
-            }
-            else
-            {
-                $msg = 'O "nome" informado j&aacute; existe.';
-                throw new Exception("$msg");
-            }
+            $this->name = $name;
         }
         else
         {
@@ -454,23 +515,7 @@ class cameras extends database
     {
         if (!empty($netcam_url))
         {
-            $db = new SQLite3(parent::getDbFile());
-
-            $stmt = $db->prepare('SELECT count(1) from cameras where netcam_url = ?');
-            $stmt->bindValue(1, $netcam_url, SQLITE3_TEXT);
-            $result = $stmt->execute();
-            $row = $result->fetchArray(SQLITE3_NUM);
-            $db->close();
-
-            if ($row[0] == 0)
-            {
-                $this->netcam_url = $netcam_url;
-            }
-            else
-            {
-                $msg = 'O "netcam_url" informado j&aacute; existe.';
-                throw new Exception("$msg");
-            }
+            $this->netcam_url = $netcam_url;
         }
         else
         {
@@ -493,11 +538,6 @@ class cameras extends database
             {
                 $this->netcam_userpass = $netcam_userpass;
             }
-        }
-        else
-        {
-            $msg = 'O valor "netcam_userpass" n&tilde;o pode ser vazio.';
-            throw new Exception("$msg");
         }
     }
 
@@ -661,6 +701,76 @@ class cameras extends database
     {
         return $this->name;
     }
+
+    public function getNetcam_url()
+    {
+        return $this->netcam_url;
+    }
+
+    public function getNetcam_userpass()
+    {
+        return $this->netcam_userpass;
+    }
+
+    public function getV4l2_palette()
+    {
+        return $this->v4l2_palette;
+    }
+
+    public function getNorm()
+    {
+        return $this->norm;
+    }
+
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    public function getFramerate()
+    {
+        return $this->framerate;
+    }
+
+    public function getMinimum_frame_time()
+    {
+        return $this->minimum_frame_time;
+    }
+
+    public function getNetcam_keepalive()
+    {
+        return $this->netcam_keepalive;
+    }
+
+    public function getAuto_brightness()
+    {
+        return $this->auto_brightness;
+    }
+
+    public function getBrightness()
+    {
+        return $this->brightness;
+    }
+
+    public function getContrast()
+    {
+        return $this->contrast;
+    }
+
+    public function getSaturation()
+    {
+        return $this->saturation;
+    }
+
+    public function getHue()
+    {
+        return $this->hue;
+    }
 }
 
 class doors extends database
@@ -724,6 +834,17 @@ class doors extends database
         $db = new SQLite3(parent::getDbFile());
 
         $stmt = $db->prepare("update cameras set door_id = null where door_id = ?");
+        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
+
+        if (! $stmt->execute())
+        {
+            $msg = $db->lastErrorMsg();
+            $db->close();
+
+            throw new Exception("$msg");
+        }
+
+        $stmt = $db->prepare("delete from doors_faces where door_id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
 
         if (! $stmt->execute())
@@ -1020,6 +1141,17 @@ class faces extends database
 
         $db = new SQLite3(parent::getDbFile());
 
+        $stmt = $db->prepare("delete from doors_faces where face_id = ?");
+        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
+
+        if (! $stmt->execute())
+        {
+            $msg = $db->lastErrorMsg();
+            $db->close();
+
+            throw new Exception("$msg");
+        }
+
         $stmt = $db->prepare("delete from faces where id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
 
@@ -1096,9 +1228,10 @@ class faces extends database
 
         $db = new SQLite3(parent::getDbFile());
 
-        $stmt = $db->prepare("insert into faces ('name','img') values (?,?)");
-        $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
-        $stmt->bindValue(2, $this->img, SQLITE3_BLOB);
+        $stmt = $db->prepare("insert into faces ('id','name','img') values (?,?,?)");
+        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
+        $stmt->bindValue(2, $this->name, SQLITE3_TEXT);
+        $stmt->bindValue(3, $this->img, SQLITE3_BLOB);
 
         if (! $stmt->execute())
         {
@@ -1129,23 +1262,7 @@ class faces extends database
     {
         if (is_numeric($id))
         {
-            $db = new SQLite3(parent::getDbFile());
-
-            $stmt = $db->prepare('SELECT count(1) from faces where id = ?');
-            $stmt->bindValue(1, $id, SQLITE3_INTEGER);
-            $result = $stmt->execute();
-            $row = $result->fetchArray(SQLITE3_NUM);
-            $db->close();
-
-            if ($row[0] == 1)
-            {
-                $this->id = $id;
-            }
-            else
-            {
-                $msg = 'O "id" informado n&atilde;o foi localizado.';
-                throw new Exception("$msg");
-            }
+            $this->id = $id;
         }
         else
         {
@@ -1154,25 +1271,17 @@ class faces extends database
         }
     }
 
-    public function findId()
+    public function getNextId()
     {
-        if (!empty($this->name))
-        {
-            $db = new SQLite3(parent::getDbFile());
+        $db = new SQLite3(parent::getDbFile());
 
-            $stmt = $db->prepare('SELECT id from faces where name = ?');
-            $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
-            $result = $stmt->execute();
-            $row = $result->fetchArray(SQLITE3_NUM);
-            $db->close();
+        $stmt = $db->prepare("SELECT seq from SQLITE_SEQUENCE where name = 'faces'; update SQLITE_SEQUENCE set seq = seq + 1 where name = 'faces'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
 
-            return $row[0];
-        }
-        else
-        {
-            $msg = 'Antes de procurar o "id" de uma face, &eacute; necess&aacute;rio carregar ou adicionar algum registro.';
-            throw new Exception("$msg");
-        }
+        $db->close();
+
+        return $row[0];
     }
 
     public function setImg($img)

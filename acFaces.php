@@ -30,12 +30,11 @@ if ($action == 'add')
     try
     {
         $face = new faces($dbFile);
+        $id = $face->getNextId();
         $face->setName($name);
         $face->setImg($image);
-        $face->add();
-
-        $id = $face->findId();
         $face->setId($id);
+        $face->add();
 
         $face->setPermissions($permissions);
     }

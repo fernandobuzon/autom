@@ -51,6 +51,8 @@ if (empty($cameras))
 }
 else
 {
+    echo '<label>C&acirc;meras vinculadas:</label>';
+
     foreach ($cameras as $camera)
     {
         echo '<div class="form-check has-success">';

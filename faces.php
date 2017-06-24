@@ -15,7 +15,6 @@
 
 </style>
 
-
 <?php
 require_once('class.php');
 
@@ -24,6 +23,10 @@ $faces = $faces->getAll();
 
 if(empty($faces))
 {
+    echo '<div class="row">';
+    echo '<p><button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="populate(\'cam.php\');">Nova face</button>';
+    echo '</div>';
+
     echo '<div class="row">';
     echo '  <div class="page-header">';
     echo '    <h1>Nenhuma face cadastrada.</h1>';

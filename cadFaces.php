@@ -123,6 +123,8 @@ if (empty($doors))
 }
 else
 {
+    echo '<label>Portas permitidas:</label>';
+
     foreach ($doors as $door)
     {
         echo '<div class="form-check has-success">';

@@ -1,0 +1,71 @@
+CREATE TABLE "main"."faces"
+(
+"id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,
+"name" TEXT NOT NULL ,
+"img" BLOB NOT NULL
+);
+
+CREATE TABLE "main"."doors"
+(
+"id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,
+"name" TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE "main"."doors_faces"
+(
+"id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,
+"door_id" INTEGER NOT NULL ,
+"face_id" INTEGER NOT NULL ,
+FOREIGN KEY(door_id) REFERENCES doors(id) , 
+FOREIGN KEY(face_id) REFERENCES faces(id)
+);
+
+CREATE TABLE "main"."cameras"
+(
+"id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,
+"door_id" INTEGER DEFAULT NULL,
+"name" TEXT NOT NULL ,
+"netcam_url" TEXT NOT NULL ,
+"netcam_userpass" TEXT ,
+"v4l2_palette" INT NOT NULL DEFAULT 17 ,
+"norm" INT NOT NULL DEFAULT 0 ,
+"width" INT NOT NULL DEFAULT 320 ,
+"height" INT NOT NULL DEFAULT 240 ,
+"framerate" INT NOT NULL DEFAULT 2 ,
+"minimum_frame_time" INT NOT NULL DEFAULT 1 ,
+"netcam_keepalive" BOOL NOT NULL DEFAULT 1,
+"auto_brightness" BOOL NOT NULL DEFAULT 0 ,
+"brightness" INT NOT NULL DEFAULT 0,
+"contrast" INT NOT NULL DEFAULT 0 ,
+"saturation" INT NOT NULL DEFAULT 0 ,
+"hue" INT NOT NULL DEFAULT 0 ,
+FOREIGN KEY(door_id) REFERENCES doors(id)
+);
+
+CREATE TABLE "main"."logs"
+(
+"id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,
+"timestamp" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+"camera_id" INTEGER NOT NULL ,
+"door_id" INTEGER NOT NULL ,
+"face_id" INTEGER NOT NULL ,
+"img" BLOB NOT NULL ,
+FOREIGN KEY(camera_id) REFERENCES cameras(id) , 
+FOREIGN KEY(door_id) REFERENCES doors(id) , 
+FOREIGN KEY(face_id) REFERENCES faces(id)
+);
+
+CREATE TABLE "main"."settings"
+(
+"setting" TEXT PRIMARY KEY NOT NULL UNIQUE ,
+"value" TEXT DEFAULT NULL
+);
+
+CREATE TABLE "main"."users"
+(
+"id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,
+"name" TEXT NOT NULL ,
+"login" TEXT NOT NULL UNIQUE ,
+"passwd" TEXT NOT NULL
+);
+
