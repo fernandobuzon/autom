@@ -50,7 +50,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Bootstrap</a>
+          <a class="navbar-brand" href="?page=home.php">Bootstrap</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -71,6 +71,16 @@
               <ul class="dropdown-menu">
                 <li><a href="?page=motion.php">Motor</a></li>
                 <li><a href="?page=settings.php">Par&acirc;metros</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comandos <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="?page=make.php">Aplicar altera&ccedil;&otilde;es</a></li>
+                <li><a href="#">Parar o servi&ccedil;o</a></li>
+                <li><a href="#">Iniciar o servi&ccedil;o</a></li>
               </ul>
             </li>
           </ul>
