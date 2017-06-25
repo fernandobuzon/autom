@@ -47,7 +47,23 @@ elseif ($step == 'threads')
     {
         echo 'OK.<br>';
     }
-
+}
+elseif ($step == 'gallery')
+{
+    try
+    {
+        $environ->setGallery();
+    }
+    catch (Exception $e)
+    {
+        $msg = $e->getMessage();
+        notify::showMsg($msg,'danger',$back);
+        die();
+    }
+    finally
+    {
+        echo 'OK.<br>';
+    }
 }
 
 ?>

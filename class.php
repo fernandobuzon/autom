@@ -134,6 +134,65 @@ class environ extends database
             throw new Exception("$msg");
         }
     }
+
+    public function setGallery()
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("select value from settings where setting = 'gallery_path'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+
+        if (!empty($row[0]))
+        {
+            $gallery_path = $row[0];
+        }
+        else
+        {
+            $msg = 'Registro "gallery_path" nulo ou n&atilde;o encontrado na tabela "settings".';
+            throw new Exception("$msg");
+        }
+
+        if(file_exists($gallery_path) && is_writable($gallery_path))
+        {
+            $result = $db->query('SELECT id from doors');
+
+            while ($row2 = $result->fetchArray(SQLITE3_NUM))
+            {
+                $door_id = $row2[0];
+                $br = $this->getBr_bin();
+                //system("echo $door_id >> /tmp/r");
+
+                $f = array();
+                $result2 = $db->query("select face_id from doors_faces where door_id = $door_id order by face_id");
+                while($face_id = $result2->fetchArray(SQLITE3_NUM))
+                {
+                    $f[] = $face_id[0];
+                }
+                $f = implode(':', $f);
+                //system("echo 'galeria $door_id - faces $f' >> /tmp/r");
+                //criar as galerias
+            }
+        }
+        else
+        {
+            $msg = 'Pasta ' . $gallery_path . ' inexistente ou sem permiss&atilde;o de escrita.';
+            throw new Exception("$msg");
+        }
+    }
+
+    public function getBr_bin()
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("SELECT value from settings where setting = 'br_bin'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+
+        $db->close();
+
+        return $row[0];
+    }
 }
 
 class notify
@@ -1117,27 +1176,6 @@ class doors extends database
         else
         {
             $msg = 'O "id" deve ser um valor num&eacute;rico.';
-            throw new Exception("$msg");
-        }
-    }
-
-    public function findId()
-    {
-        if (!empty($this->name))
-        {
-            $db = new SQLite3(parent::getDbFile());
-
-            $stmt = $db->prepare('SELECT id from doors where name = ?');
-            $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
-            $result = $stmt->execute();
-            $row = $result->fetchArray(SQLITE3_NUM);
-            $db->close();
-
-            return $row[0];
-        }
-        else
-        {
-            $msg = 'Antes de procurar o "id" de uma porta, &eacute; necess&aacute;rio carregar ou adicionar algum registro.';
             throw new Exception("$msg");
         }
     }
