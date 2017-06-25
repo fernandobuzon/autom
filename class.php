@@ -26,6 +26,116 @@ abstract class database
     }
 }
 
+class environ extends database
+{
+    public function environ($dbFile)
+    {
+        parent::setDbFile($dbFile);
+    }
+
+    public function setConf()
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("select value from settings where setting = 'conf_value'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+        $conf_value = $row[0];
+
+        $stmt = $db->prepare("select value from settings where setting = 'conf_path'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+
+        if (!empty($row[0]))
+        {
+            $conf_path = $row[0];
+        }
+        else
+        {
+            $msg = 'Registro "conf_path" nulo ou n&atilde;o encontrado na tabela "settings".';
+            throw new Exception("$msg");
+        }
+
+        if(is_dir($conf_path) && is_writable($conf_path))
+        {
+            if (file_exists($conf_path . '/motion.conf') && !is_writable($conf_path . '/motion.conf'))
+            {
+                $msg = 'Arquivo ' . $conf_path . ' sem permiss&atilde;o de escrita.';
+                throw new Exception("$msg");
+            }
+            else
+            {
+                $file = $conf_path . '/motion.conf';
+                file_put_contents($file, $conf_value);
+                chmod($file, 0664);
+            }
+        }
+        else
+        {
+            $msg = 'Pasta ' . $conf_path . ' sem permiss&atilde;o de escrita.';
+            throw new Exception("$msg");
+        }
+    }
+
+    public function setThreads()
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("select value from settings where setting = 'conf_path'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+
+        if (!empty($row[0]))
+        {
+            $conf_path = $row[0];
+        }
+        else
+        {
+            $msg = 'Registro "conf_path" nulo ou n&atilde;o encontrado na tabela "settings".';
+            throw new Exception("$msg");
+        }
+
+        if(file_exists($conf_path) && is_writable($conf_path))
+        {
+            $stmt = $db->prepare("select v4l2_palette,norm,width,height,framerate,minimum_frame_time,netcam_url,netcam_userpass,netcam_keepalive,auto_brightness,brightness,contrast,saturation,hue from cameras");
+            $result = $stmt->execute();
+
+            $i = 1;
+            while($row = $result->fetchArray(SQLITE3_ASSOC))
+            {
+                file_put_contents($conf_path . '/motion.conf', "thread $conf_path/thread$i.conf" . PHP_EOL, FILE_APPEND);
+
+                $content = null;
+                $content .= 'v4l2_palette ' . $row['v4l2_palette'] . PHP_EOL;
+                $content .= 'norm ' . $row['norm'] . PHP_EOL;
+                $content .= 'width ' . $row['width'] . PHP_EOL;
+                $content .= 'height ' . $row['height'] . PHP_EOL;
+                $content .= 'framerate ' . $row['framerate'] . PHP_EOL;
+                $content .= 'minimum_frame_time ' . $row['minimum_frame_time'] . PHP_EOL;
+                $content .= 'netcam_url ' . $row['netcam_url'] . PHP_EOL;
+                $content .= 'netcam_userpass ' . $row['netcam_userpass'] . PHP_EOL;
+                $content .= 'netcam_keepalive ' . $row['netcam_keepalive'] . PHP_EOL;
+                $content .= 'auto_brightness ' . $row['auto_brightness'] . PHP_EOL;
+                $content .= 'brightness ' . $row['brightness'] . PHP_EOL;
+                $content .= 'contrast ' . $row['contrast'] . PHP_EOL;
+                $content .= 'saturation ' . $row['saturation'] . PHP_EOL;
+                $content .= 'hue ' . $row['hue'] . PHP_EOL;
+
+                $file = "$conf_path/thread$i.conf";
+                file_put_contents($file, $content);
+                chmod($file, 0664);
+
+                $i++;   
+            }
+        }
+        else
+        {
+            $msg = 'Arquivo ' . $conf_path . '/motion.conf inexistente ou sem permiss&atilde;o de escrita.';
+            throw new Exception("$msg");
+        }
+    }
+}
+
 class notify
 {
     public static function showMsg($msg,$alert,$page)

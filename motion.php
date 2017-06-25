@@ -18,7 +18,8 @@ $value = $settings->getValue('conf_value');
           <textarea class="form-control" id="value" rows="30"><?php echo $value; ?></textarea>
         </div>
         <div class="form-group">
-          <p><button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="save()">Salvar</button>
+          <p><button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="save()">Salvar&nbsp;</button>
+          <button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="populate('home.php');">Voltar</button>
         </div>
       </form> 
     </div>

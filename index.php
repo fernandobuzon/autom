@@ -78,7 +78,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comandos <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="?page=make.php">Aplicar altera&ccedil;&otilde;es</a></li>
+                <li><a href="?page=environ.php">Aplicar altera&ccedil;&otilde;es</a></li>
                 <li><a href="#">Parar o servi&ccedil;o</a></li>
                 <li><a href="#">Iniciar o servi&ccedil;o</a></li>
               </ul>
