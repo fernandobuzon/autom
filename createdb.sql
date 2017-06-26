@@ -69,3 +69,9 @@ CREATE TABLE "main"."users"
 "passwd" TEXT NOT NULL
 );
 
+insert into settings ('setting','value') values ('conf_path','/etc/motion');
+insert into settings ('setting','value') values ('gallery_path','/etc/motion/gallery');
+insert into settings ('setting','value') values ('br_bin','/usr/local/bin/br');
+insert into settings ('setting','value') values ('restart_cmd','sudo /etc/init.d/motion restart');
+insert into settings ('setting','value') values ('start_cmd','sudo /etc/init.d/motion start');
+insert into settings ('setting','value') values ('stop_cmd','sudo /etc/init.d/motion stop');

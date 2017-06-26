@@ -36,7 +36,8 @@ foreach($list as $setting)
 }
 ?>
         <div class="form-group">
-          <p><button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="save();">Salvar</button>
+          <button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="save();">Salvar</button>&nbsp;
+          <button type="button" class="btn btn-default" id="btnCancel" name="btnCancel" onclick="populate('home.php')">Cancelar</button>
         </div>
       </form> 
     </div>

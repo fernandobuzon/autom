@@ -112,9 +112,6 @@ elseif ($action == 'edit')
 
     $id = $_POST['id'];
 
-    echo $_POST['netcam_keepalive'] . $_POST['auto_brightness'];
-
-
     if (isset($_POST['netcam_keepalive']) && $_POST['netcam_keepalive'] == 1)
     {
         $netcam_keepalive = 1;

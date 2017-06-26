@@ -6,6 +6,7 @@ $back = 'home.php';
 
 if (empty($_POST['step']))
 {
+    echo 'ERRO!<br>' . PHP_EOL;
     $msg = '&Eacute; necess&aacute;rio informar o "step" via POST.';
     notify::showMsg($msg,'danger',$back);
     die();
@@ -22,6 +23,7 @@ if ($step == 'conf')
     }
     catch (Exception $e)
     {
+        echo 'ERRO!<br>' . PHP_EOL;
         $msg = $e->getMessage();
         notify::showMsg($msg,'danger',$back);
         die();
@@ -39,6 +41,7 @@ elseif ($step == 'threads')
     }
     catch (Exception $e)
     {
+        echo 'ERRO!<br>' . PHP_EOL;
         $msg = $e->getMessage();
         notify::showMsg($msg,'danger',$back);
         die();
@@ -56,6 +59,25 @@ elseif ($step == 'gallery')
     }
     catch (Exception $e)
     {
+        echo 'ERRO!<br>' . PHP_EOL;
+        $msg = $e->getMessage();
+        notify::showMsg($msg,'danger',$back);
+        die();
+    }
+    finally
+    {
+        echo 'OK.<br>';
+    }
+}
+elseif ($step == 'restart')
+{
+    try
+    {
+        $environ->restart();
+    }
+    catch (Exception $e)
+    {
+        echo 'ERRO!<br>' . PHP_EOL;
         $msg = $e->getMessage();
         notify::showMsg($msg,'danger',$back);
         die();

@@ -40,7 +40,7 @@ class environ extends database
         $stmt = $db->prepare("select value from settings where setting = 'conf_value'");
         $result = $stmt->execute();
         $row = $result->fetchArray(SQLITE3_NUM);
-        $conf_value = $row[0];
+        $conf_value = str_ireplace("\x0D", "", $row[0]);
 
         $stmt = $db->prepare("select value from settings where setting = 'conf_path'");
         $result = $stmt->execute();
@@ -167,11 +167,62 @@ class environ extends database
                 $result2 = $db->query("select face_id from doors_faces where door_id = $door_id order by face_id");
                 while($face_id = $result2->fetchArray(SQLITE3_NUM))
                 {
-                    $f[] = $face_id[0];
+                    $imgFile = $gallery_path . '/face' . $face_id[0] . '.jpg';
+                    $f[] = $imgFile;
+
+                    $stmt = $db->prepare("select img from faces where id = ?");
+                    $stmt->bindValue(1, $face_id[0], SQLITE3_INTEGER);
+                    $result3 = $stmt->execute();
+                    $row3 = $result3->fetchArray(SQLITE3_NUM);
+
+                    if (file_exists($imgFile))
+                    {
+                        if(!unlink($imgFile))
+                        {
+                            $msg = 'Erro ao remover a face antiga (' . $imgFile . ').';
+                            throw new Exception("$msg");            
+                        }
+                    }
+
+                    if (!file_put_contents($imgFile ,$row3[0]))
+                    {
+                        $msg = 'Erro ao gerar a imagem da face (' . $imgFile . ').';
+                        throw new Exception("$msg");            
+                    }
                 }
-                $f = implode(':', $f);
-                //system("echo 'galeria $door_id - faces $f' >> /tmp/r");
-                //criar as galerias
+                $f = implode(' ', $f);
+                $galFile = $gallery_path . '/' . $door_id . '.gal';
+
+                if (file_exists($galFile))
+                {
+                    if(!unlink($galFile))
+                    {
+                        $msg = 'Erro ao remover a galeria antiga (' . $galFile . ').';
+                        throw new Exception("$msg");            
+                    }
+                }
+
+                $br_bin = $this->getBr_bin();
+                system("$br_bin -algorithm FaceRecognition -enrollAll -enroll $f $galFile > $galFile-enroll.log 2>&1");
+
+                $log = file($galFile . '-enroll.log');
+                foreach($log as $line)
+                {
+                    $r = explode(' ', $line);
+                    $r = $r[0];
+                    if ($r == 'Set' || $r == 'Loading' || $r == 'Enrolling')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (trim($r) != '100.00%')
+                        {
+                            $msg = 'Erro ao gerando a nova galeria, consulte ' . $r . $galFile . '-enroll.log';
+                            throw new Exception("$msg");            
+                        }
+                    }
+                }
             }
         }
         else
@@ -191,7 +242,81 @@ class environ extends database
 
         $db->close();
 
-        return $row[0];
+        if (empty($row[0]))
+        {
+            $msg = 'Par&acirc;meto "br_bin" n&atilde;o encontrado na tabela settings.';
+            throw new Exception("$msg");
+        }
+        else
+        {
+            return $row[0];
+        }
+    }
+
+    public function restart()
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("SELECT value from settings where setting = 'restart_cmd'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+
+        $db->close();
+
+        if (empty($row[0]))
+        {
+            $msg = 'Par&acirc;meto "restart_cmd" n&atilde;o encontrado na tabela settings.';
+            throw new Exception("$msg");
+        }
+        else
+        {
+            $cmd = $row[0];
+            system("$cmd > /dev/null");
+        }
+    }
+
+    public function start()
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("SELECT value from settings where setting = 'start_cmd'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+
+        $db->close();
+
+        if (empty($row[0]))
+        {
+            $msg = 'Par&acirc;meto "start_cmd" n&atilde;o encontrado na tabela settings.';
+            throw new Exception("$msg");
+        }
+        else
+        {
+            $cmd = $row[0];
+            system("$cmd > /dev/null");
+        }
+    }
+
+    public function stop()
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("SELECT value from settings where setting = 'stop_cmd'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+
+        $db->close();
+
+        if (empty($row[0]))
+        {
+            $msg = 'Par&acirc;meto "stop_cmd" n&atilde;o encontrado na tabela settings.';
+            throw new Exception("$msg");
+        }
+        else
+        {
+            $cmd = $row[0];
+            system("$cmd > /dev/null");
+        }
     }
 }
 

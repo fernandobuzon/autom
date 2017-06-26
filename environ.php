@@ -66,7 +66,7 @@ function setThreads(prog)
         success: function (data) {
             $('#status').append(data);
             $("#status").append("<img id='loading-gallery' src='loading.gif'>&nbsp; Galerias de fotos... ");
-            setGallery(100);
+            setGallery(80);
         }
     });
 };
@@ -92,12 +92,37 @@ function setGallery(prog)
         },
         success: function (data) {
             $('#status').append(data);
-            //$("#status").append("<img id='loading-gallery' src='loading.gif'>&nbsp; Galerias de fotos... ");
-            //setGallery(100);
+            $("#status").append("<img id='loading-restart' src='loading.gif'>&nbsp; Reiniciando o servi&ccedil;o... ");
+            restart(100);
         }
     });
 };
 
-//galerias
+function restart(prog)
+{
+    var step = 'restart';
+
+    var form;
+    form = new FormData();
+    form.append('step', step);
+
+    $.ajax({
+        url: 'acEnviron.php',
+        data: form,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        cache: false,
+        complete: function(){
+            $('#loading-' + step).hide();
+            $('#progress').attr("style", 'width: ' + prog + '%')
+        },
+        success: function (data) {
+            $('#status').append(data);
+            //$("#status").append("<img id='loading-gallery' src='loading.gif'>&nbsp; Proximo... ");
+            //proximo(100);
+        }
+    });
+};
 
 </script>
