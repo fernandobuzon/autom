@@ -119,8 +119,7 @@ function restart(prog)
         },
         success: function (data) {
             $('#status').append(data);
-            //$("#status").append("<img id='loading-gallery' src='loading.gif'>&nbsp; Proximo... ");
-            //proximo(100);
+            $('#title').html("<h1>Conclu&iacute;do!</h1>");
         }
     });
 };

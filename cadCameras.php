@@ -1,6 +1,6 @@
 <?php
 
-require('class.php');
+require_once('class.php');
 
 if (is_numeric($_GET['id']))
 {

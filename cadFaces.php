@@ -16,6 +16,7 @@
 </style>
 
 <?php
+
 require_once('class.php');
 
 if (is_numeric($_GET['id']))

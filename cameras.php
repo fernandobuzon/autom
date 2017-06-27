@@ -3,6 +3,7 @@
 </div>
 
 <?php
+
 require_once('class.php');
 
 $cameras = new cameras($dbFile);

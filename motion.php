@@ -1,8 +1,8 @@
 <?php
 
 require_once('class.php');
-$settings = new settings($dbFile);
 
+$settings = new settings($dbFile);
 $value = $settings->getValue('conf_value');
 ?>
 
@@ -19,7 +19,7 @@ $value = $settings->getValue('conf_value');
         </div>
         <div class="form-group">
           <p><button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="save()">Salvar&nbsp;</button>
-          <button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="populate('home.php');">Voltar</button>
+          <button type="button" class="btn btn-default" onclick="populate('home.php');">Voltar</button>
         </div>
       </form> 
     </div>

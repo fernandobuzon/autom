@@ -76,6 +76,7 @@ insert into settings ('setting','value') values ('br_bin','/usr/local/bin/br');
 insert into settings ('setting','value') values ('restart_cmd','sudo /etc/init.d/motion restart');
 insert into settings ('setting','value') values ('start_cmd','sudo /etc/init.d/motion start');
 insert into settings ('setting','value') values ('stop_cmd','sudo /etc/init.d/motion stop');
+insert into settings ('setting','value') values ('check_cmd','pgrep motion');
 insert into settings ('setting','value') values ('match','2');
 insert into settings ('setting','value') values ('interval','6');
 insert into settings ('setting','value') values ('log','/var/log/br.log');

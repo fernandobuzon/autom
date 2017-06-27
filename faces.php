@@ -16,6 +16,7 @@
 </style>
 
 <?php
+
 require_once('class.php');
 
 $faces = new faces($dbFile);

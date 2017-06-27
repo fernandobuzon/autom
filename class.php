@@ -262,6 +262,37 @@ class environ extends database
         }
     }
 
+    public function checkStatus()
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("SELECT value from settings where setting = 'check_cmd'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+
+        $db->close();
+
+        if (empty($row[0]))
+        {
+            $msg = 'Par&acirc;meto "restart_cmd" n&atilde;o encontrado na tabela settings.';
+            throw new Exception("$msg");
+        }
+        else
+        {
+            $cmd = $row[0];
+            $pid = `$cmd`;
+
+            if (empty($pid))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+
     public function restart()
     {
         $db = new SQLite3(parent::getDbFile());

@@ -3,6 +3,7 @@
 </div>
 
 <?php
+
 require_once('class.php');
 
 $doors = new doors($dbFile);

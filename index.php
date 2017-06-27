@@ -1,4 +1,6 @@
 <?php
+require_once('class.php');
+
 //session_start ();
 //if (! isset ( $_SESSION ['level'] ))
 //    header ( 'location:login.php' );
@@ -79,8 +81,12 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Comandos <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="?page=environ.php">Aplicar altera&ccedil;&otilde;es</a></li>
-                <li><a href="#">Parar o servi&ccedil;o</a></li>
-                <li><a href="#">Iniciar o servi&ccedil;o</a></li>
+                <?php
+                    $checkStatus = new environ($dbFile);
+                    $checkStatus = $checkStatus->checkStatus();
+                ?>
+                <li id="stop" <?php if ($checkStatus == false) echo ' class="disabled "' ?>><a href="#" onclick="cmd('stop');">Parar o servi&ccedil;o</a></li>
+                <li id="start" <?php if ($checkStatus == true) echo ' class="disabled "' ?>><a href="#" onclick="cmd('start');">Iniciar o servi&ccedil;o</a></li>
               </ul>
             </li>
           </ul>
@@ -135,7 +141,43 @@
         }
       ?>
 
-    </script>
+    function cmd(cmd)
+    {
+        if (cmd == 'stop') {
+            var r = confirm('Tem certeza que deseja interromper?');
+            if (r == false) {
+                throw 'cancelado';
+            }
+        }
+
+        var form;
+        form = new FormData();
+        form.append('command', cmd);
+
+        $.ajax({
+            url: 'acCommands.php',
+            data: form,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            cache: false,
+            success: function (data) {
+                if (data == 'started') {
+                    alert('Inicializado.');
+                    $('#start').attr('class', 'disabled');
+                    $('#stop').attr('class', '');
+                } else if (data == 'stoped') {
+                    alert('Interrompido.');
+                    $('#start').attr('class', '');
+                    $('#stop').attr('class', 'disabled');
+                } else if (data == 'restarted') {
+                    alert('Reinicializado.');
+                };
+            }
+        });
+    };
+
+</script>
 
   </body>
 </html>
