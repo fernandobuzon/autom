@@ -447,7 +447,15 @@ class logs extends database
     public function getAll()
     {
         $db = new SQLite3(parent::getDbFile());
-        $result = $db->query('SELECT * from logs');
+        $result = $db->query('SELECT l.id as id,
+                                        l.timestamp as date,
+                                        l.match as mach,
+                                        d.name as door,
+                                        c.name as camera,
+                                        f.name as name from logs l
+                                            inner join faces f on f.id = l.face_id
+                                            inner join doors d on d.id = l.door_id
+                                            inner join cameras c on c.id = l.camera_id order by l.id desc limit 12');
 
         while ($row = $result->fetchArray(SQLITE3_ASSOC))
         {
@@ -600,6 +608,12 @@ class logs extends database
             throw new Exception("$msg");
         }
     }
+
+    public function getImg()
+    {
+        //header('Content-Type: image/jpeg');
+        echo $this->img;
+    }
 }
 
 class cameras extends database
@@ -636,16 +650,6 @@ class cameras extends database
         }
 
         $db = new SQLite3(parent::getDbFile());
-
-        $stmt = $db->prepare("delete from logs where camera_id = ?");
-        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
-        if (! $stmt->execute())
-        {
-            $msg = $db->lastErrorMsg();
-            $db->close();
-
-            throw new Exception("$msg");
-        }
 
         $stmt = $db->prepare("delete from cameras where id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
@@ -1178,17 +1182,6 @@ class doors extends database
             throw new Exception("$msg");
         }
 
-        $stmt = $db->prepare("delete from doors_faces where door_id = ?");
-        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
-
-        if (! $stmt->execute())
-        {
-            $msg = $db->lastErrorMsg();
-            $db->close();
-
-            throw new Exception("$msg");
-        }
-
         $stmt = $db->prepare("delete from doors where id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
 
@@ -1474,17 +1467,6 @@ class faces extends database
         }
 
         $db = new SQLite3(parent::getDbFile());
-
-        $stmt = $db->prepare("delete from doors_faces where face_id = ?");
-        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
-
-        if (! $stmt->execute())
-        {
-            $msg = $db->lastErrorMsg();
-            $db->close();
-
-            throw new Exception("$msg");
-        }
 
         $stmt = $db->prepare("delete from faces where id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);

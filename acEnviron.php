@@ -1,5 +1,7 @@
 <?php
 
+require_once('class.php');
+
 $back = 'home.php';
 
 if (empty($_POST['step']))

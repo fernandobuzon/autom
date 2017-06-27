@@ -16,8 +16,8 @@ CREATE TABLE "main"."doors_faces"
 "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,
 "door_id" INTEGER NOT NULL ,
 "face_id" INTEGER NOT NULL ,
-FOREIGN KEY(door_id) REFERENCES doors(id) , 
-FOREIGN KEY(face_id) REFERENCES faces(id)
+FOREIGN KEY(door_id) REFERENCES doors(id) ON DELETE CASCADE, 
+FOREIGN KEY(face_id) REFERENCES faces(id) ON DELETE CASCADE
 );
 
 CREATE TABLE "main"."cameras"
@@ -39,7 +39,7 @@ CREATE TABLE "main"."cameras"
 "contrast" INT NOT NULL DEFAULT 0 ,
 "saturation" INT NOT NULL DEFAULT 0 ,
 "hue" INT NOT NULL DEFAULT 0 ,
-FOREIGN KEY(door_id) REFERENCES doors(id)
+FOREIGN KEY(door_id) REFERENCES doors(id) ON DELETE CASCADE
 );
 
 CREATE TABLE "main"."logs"
@@ -51,9 +51,9 @@ CREATE TABLE "main"."logs"
 "face_id" INTEGER NOT NULL ,
 "img" BLOB NOT NULL ,
 "match" FLOAT NOT NULL ,
-FOREIGN KEY(camera_id) REFERENCES cameras(id) , 
-FOREIGN KEY(door_id) REFERENCES doors(id) , 
-FOREIGN KEY(face_id) REFERENCES faces(id)
+FOREIGN KEY(camera_id) REFERENCES cameras(id) ON DELETE CASCADE ,
+FOREIGN KEY(door_id) REFERENCES doors(id) ON DELETE CASCADE , 
+FOREIGN KEY(face_id) REFERENCES faces(id) ON DELETE CASCADE
 );
 
 CREATE TABLE "main"."settings"
