@@ -1314,6 +1314,27 @@ class doors extends database
         }
     }
 
+    public function findId()
+    {
+        if (!empty($this->name))
+        {
+            $db = new SQLite3(parent::getDbFile());
+
+            $stmt = $db->prepare('SELECT id from doors where name = ?');
+            $stmt->bindValue(1, $this->name, SQLITE3_TEXT);
+            $result = $stmt->execute();
+            $row = $result->fetchArray(SQLITE3_NUM);
+            $db->close();
+
+            return $row[0];
+        }
+        else
+        {
+            $msg = 'Antes de procurar o "id" de uma porta, &eacute; necess&aacute;rio carregar ou adicionar algum registro.';
+            throw new Exception("$msg");
+        }
+    }
+
     public function setName($name)
     {
         if (!empty($name))
