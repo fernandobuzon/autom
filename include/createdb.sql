@@ -50,6 +50,7 @@ CREATE TABLE "main"."logs"
 "door_id" INTEGER NOT NULL ,
 "face_id" INTEGER NOT NULL ,
 "img" BLOB NOT NULL ,
+"match" FLOAT NOT NULL ,
 FOREIGN KEY(camera_id) REFERENCES cameras(id) , 
 FOREIGN KEY(door_id) REFERENCES doors(id) , 
 FOREIGN KEY(face_id) REFERENCES faces(id)
@@ -75,3 +76,8 @@ insert into settings ('setting','value') values ('br_bin','/usr/local/bin/br');
 insert into settings ('setting','value') values ('restart_cmd','sudo /etc/init.d/motion restart');
 insert into settings ('setting','value') values ('start_cmd','sudo /etc/init.d/motion start');
 insert into settings ('setting','value') values ('stop_cmd','sudo /etc/init.d/motion stop');
+insert into settings ('setting','value') values ('match','2');
+insert into settings ('setting','value') values ('interval','6');
+insert into settings ('setting','value') values ('log','/var/log/br.log');
+insert into settings ('setting','value') values ('csv','/tmp/out.csv');
+

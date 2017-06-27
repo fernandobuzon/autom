@@ -97,7 +97,7 @@ class environ extends database
 
         if(file_exists($conf_path) && is_writable($conf_path))
         {
-            $stmt = $db->prepare("select v4l2_palette,norm,width,height,framerate,minimum_frame_time,netcam_url,netcam_userpass,netcam_keepalive,auto_brightness,brightness,contrast,saturation,hue from cameras");
+            $stmt = $db->prepare("select * from cameras");
             $result = $stmt->execute();
 
             $i = 1;
@@ -106,6 +106,7 @@ class environ extends database
                 file_put_contents($conf_path . '/motion.conf', "thread $conf_path/thread$i.conf" . PHP_EOL, FILE_APPEND);
 
                 $content = null;
+                $content .= '# door_id: ' . $row['door_id'] . ' | camera_id: ' . $row['id'] . PHP_EOL;
                 $content .= 'v4l2_palette ' . $row['v4l2_palette'] . PHP_EOL;
                 $content .= 'norm ' . $row['norm'] . PHP_EOL;
                 $content .= 'width ' . $row['width'] . PHP_EOL;
@@ -165,6 +166,8 @@ class environ extends database
 
                 $f = array();
                 $result2 = $db->query("select face_id from doors_faces where door_id = $door_id order by face_id");
+
+                $c = 0;
                 while($face_id = $result2->fetchArray(SQLITE3_NUM))
                 {
                     $imgFile = $gallery_path . '/face' . $face_id[0] . '.jpg';
@@ -189,37 +192,43 @@ class environ extends database
                         $msg = 'Erro ao gerar a imagem da face (' . $imgFile . ').';
                         throw new Exception("$msg");            
                     }
-                }
-                $f = implode(' ', $f);
-                $galFile = $gallery_path . '/' . $door_id . '.gal';
 
-                if (file_exists($galFile))
-                {
-                    if(!unlink($galFile))
-                    {
-                        $msg = 'Erro ao remover a galeria antiga (' . $galFile . ').';
-                        throw new Exception("$msg");            
-                    }
+                    $c++;
                 }
 
-                $br_bin = $this->getBr_bin();
-                system("$br_bin -algorithm FaceRecognition -enrollAll -enroll $f $galFile > $galFile-enroll.log 2>&1");
-
-                $log = file($galFile . '-enroll.log');
-                foreach($log as $line)
+                if ($c > 0)
                 {
-                    $r = explode(' ', $line);
-                    $r = $r[0];
-                    if ($r == 'Set' || $r == 'Loading' || $r == 'Enrolling')
+                    $f = implode(' ', $f);
+                    $galFile = $gallery_path . '/' . $door_id . '.gal';
+
+                    if (file_exists($galFile))
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        if (trim($r) != '100.00%')
+                        if(!unlink($galFile))
                         {
-                            $msg = 'Erro ao gerando a nova galeria, consulte ' . $r . $galFile . '-enroll.log';
+                            $msg = 'Erro ao remover a galeria antiga (' . $galFile . ').';
                             throw new Exception("$msg");            
+                        }
+                    }
+
+                    $br_bin = $this->getBr_bin();
+                    system("$br_bin -algorithm FaceRecognition -enrollAll -enroll $f $galFile > $galFile-enroll.log 2>&1");
+
+                    $log = file($galFile . '-enroll.log');
+                    foreach($log as $line)
+                    {
+                        $r = explode(' ', $line);
+                        $r = $r[0];
+                        if ($r == 'Set' || $r == 'Loading' || $r == 'Enrolling')
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            if (trim($r) != '100.00%')
+                            {
+                                $msg = 'Erro ao gerando a nova galeria, consulte ' . $r . $galFile . '-enroll.log';
+                                throw new Exception("$msg");            
+                            }
                         }
                     }
                 }
