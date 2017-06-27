@@ -81,4 +81,4 @@ insert into settings ('setting','value') values ('match','2');
 insert into settings ('setting','value') values ('interval','6');
 insert into settings ('setting','value') values ('log','/var/log/br.log');
 insert into settings ('setting','value') values ('csv','/tmp/out.csv');
-
+insert into SQLITE_SEQUENCE ('name','seq') values ('faces',0);

@@ -103,6 +103,7 @@ class environ extends database
             $i = 1;
             while($row = $result->fetchArray(SQLITE3_ASSOC))
             {
+                file_put_contents($conf_path . '/motion.conf', PHP_EOL, FILE_APPEND);
                 file_put_contents($conf_path . '/motion.conf', "thread $conf_path/thread$i.conf" . PHP_EOL, FILE_APPEND);
 
                 $content = null;
@@ -211,7 +212,7 @@ class environ extends database
                     }
 
                     $br_bin = $this->getBr_bin();
-                    system("$br_bin -algorithm FaceRecognition -enrollAll -enroll $f $galFile > $galFile-enroll.log 2>&1");
+                    system("$br_bin -algorithm FaceRecognition -enrollAll -enroll $f $galFile > $galFile-enroll.log && chmod 664 $galFile-enroll.log 2>&1");
 
                     $log = file($galFile . '-enroll.log');
                     foreach($log as $line)
@@ -1591,13 +1592,13 @@ class faces extends database
     {
         $db = new SQLite3(parent::getDbFile());
 
-        $stmt = $db->prepare("SELECT seq from SQLITE_SEQUENCE where name = 'faces'; update SQLITE_SEQUENCE set seq = seq + 1 where name = 'faces'");
+        $stmt = $db->prepare("SELECT seq from SQLITE_SEQUENCE where name = 'faces'; update SQLITE_SEQUENCE set seq = seq + 1 where name = 'faces';");
         $result = $stmt->execute();
         $row = $result->fetchArray(SQLITE3_NUM);
 
         $db->close();
 
-        return $row[0];
+        return $row[0] + 1;
     }
 
     public function setImg($img)
