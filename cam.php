@@ -5,7 +5,7 @@
             <video id="v"></video>
         </div>
         <div id='area_save' name='area_save' style='display: none;'>
-            <button id="again">Tentar novamente</button>&nbsp;<button id="continue" onclick="next();">Continuar</button><br>
+            <button id="again">Tentar novamente</button>&nbsp;<button id="continue" onclick="assessment();">Continuar</button><br>
             <canvas width="360" height="480" id="canvas" style="display:none;"></canvas>
             <img src="" id="photo">
         </div>
@@ -82,12 +82,38 @@
             console.log("KO");
         };
 
+function assessment()
+{
+    var image = $('#photo').attr('src');
+
+    var form;
+    form = new FormData();
+    form.append('image', image);
+
+    $.ajax({
+        url: 'assessment.php',
+        data: form,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        cache: false,
+        success: function (data) {
+            if (data == '') {
+                next();
+            } else {
+                alert('Imagem sem face! Tente novamente');
+                $('#area_save').hide();
+                $('#area_take').show();
+            }
+        }
+    });
+};
+
 function next ()
 {
     var image = $('#photo').attr('src');
     $('#image').val(image);
 
-    //alert $('#image').val();
     $('#form1').submit();
 }
 

@@ -242,11 +242,64 @@ class environ extends database
         }
     }
 
+    public function assessment($image)
+    {
+        $assessment_tmp = $this->getAssessment_tmp();
+        if (empty($assessment_tmp))
+        {
+            $msg = 'Arquivo tempor&aacute;rio para assessment "settings.assessment_tmp" n&atilde;o definido na tabela settings.';
+            throw new Exception("$msg");
+        }
+
+        $br_bin = $this->getBr_bin();
+        if (empty($br_bin))
+        {
+            $msg = 'Arquivo bin&aacute;rio do Briometrics "settings.br_bin" n&atilde;o definido na tabela settings.';
+            throw new Exception("$msg");
+        }
+
+        //return $image;
+
+        $image = explode(',', $image);
+        $image = base64_decode($image[1]);
+        
+        if (!file_put_contents($assessment_tmp ,$image))
+        {
+            $msg = 'Erro ao gerar a imagem tempor&aacute; para o assessment.';
+            throw new Exception("$msg");            
+        }
+       
+        $result = `$br_bin -algorithm FaceRecognition -compare $assessment_tmp $assessment_tmp`;
+
+        return $result;
+    }
+
     public function getBr_bin()
     {
         $db = new SQLite3(parent::getDbFile());
 
         $stmt = $db->prepare("SELECT value from settings where setting = 'br_bin'");
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+
+        $db->close();
+
+        if (empty($row[0]))
+        {
+            $msg = 'Par&acirc;meto "br_bin" n&atilde;o encontrado na tabela settings.';
+            throw new Exception("$msg");
+        }
+        else
+        {
+            return $row[0];
+        }
+    }
+
+    public function getAssessment_tmp()
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("SELECT value from settings where setting = 'assessment_tmp'");
         $result = $stmt->execute();
         $row = $result->fetchArray(SQLITE3_NUM);
 

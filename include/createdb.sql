@@ -45,7 +45,7 @@ FOREIGN KEY(door_id) REFERENCES doors(id) ON DELETE CASCADE
 CREATE TABLE "main"."logs"
 (
 "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE ,
-"timestamp" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+"timestamp" DATETIME NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')) ,
 "camera_id" INTEGER NOT NULL ,
 "door_id" INTEGER NOT NULL ,
 "face_id" INTEGER NOT NULL ,
@@ -81,4 +81,5 @@ insert into settings ('setting','value') values ('match','2');
 insert into settings ('setting','value') values ('interval','6');
 insert into settings ('setting','value') values ('log','/var/log/br.log');
 insert into settings ('setting','value') values ('csv','/tmp/out.csv');
+insert into settings ('setting','value') values ('assessment_tmp','/tmp/assessment.tmp');
 insert into SQLITE_SEQUENCE ('name','seq') values ('faces',0);
