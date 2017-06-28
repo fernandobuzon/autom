@@ -162,8 +162,6 @@ class environ extends database
             while ($row2 = $result->fetchArray(SQLITE3_NUM))
             {
                 $door_id = $row2[0];
-                $br = $this->getBr_bin();
-                //system("echo $door_id >> /tmp/r");
 
                 $f = array();
                 $result2 = $db->query("select face_id from doors_faces where door_id = $door_id order by face_id");
@@ -212,7 +210,9 @@ class environ extends database
                     }
 
                     $br_bin = $this->getBr_bin();
-                    system("$br_bin -algorithm FaceRecognition -enrollAll -enroll $f $galFile > $galFile-enroll.log && chmod 664 $galFile-enroll.log 2>&1");
+                    system("$br_bin -algorithm FaceRecognition -enrollAll -enroll $f $galFile > $galFile-enroll.log 2>&1");
+                    chmod($galFile, 0664);
+                    chmod($galFile . '-enroll.log', 0664);
 
                     $log = file($galFile . '-enroll.log');
                     foreach($log as $line)
@@ -651,6 +651,7 @@ class cameras extends database
         }
 
         $db = new SQLite3(parent::getDbFile());
+        $db->exec('PRAGMA foreign_keys = ON;');
 
         $stmt = $db->prepare("delete from cameras where id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
@@ -1171,6 +1172,7 @@ class doors extends database
         }
 
         $db = new SQLite3(parent::getDbFile());
+        $db->exec('PRAGMA foreign_keys = ON;');
 
         $stmt = $db->prepare("update cameras set door_id = null where door_id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
@@ -1468,6 +1470,7 @@ class faces extends database
         }
 
         $db = new SQLite3(parent::getDbFile());
+        $db->exec('PRAGMA foreign_keys = ON;');
 
         $stmt = $db->prepare("delete from faces where id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
@@ -1797,6 +1800,7 @@ class users extends database
         }
 
         $db = new SQLite3(parent::getDbFile());
+        $db->exec('PRAGMA foreign_keys = ON;');
 
         $stmt = $db->prepare("delete from users where id = ?");
         $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
