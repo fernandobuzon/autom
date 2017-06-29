@@ -48,7 +48,7 @@ else
                     <!-- Top part of the slider -->
                     <div class="row">
                         <div class="col-sm-12" id="carousel-bounding-box">
-                           <div class="carousel slide" id="myCarousel">
+                            <div class="carousel slide" id="myCarousel">
                                 <!-- Carousel items -->
                                 <div class="carousel-inner">
 
@@ -100,6 +100,7 @@ else
             <!-- Right panel -->
             <div class="col-sm-6" id="slider-thumbs">
                 <!-- Bottom switcher of slider -->
+                <div class="row"></div>
                 <ul class="hide-bullets">
                     <div class="row">
                         <div class="panel panel-default">
