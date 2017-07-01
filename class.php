@@ -1932,6 +1932,64 @@ class users extends database
         return $users;
     }
 
+    public function findId($login)
+    {
+        $db = new SQLite3(parent::getDbFile());
+
+        $stmt = $db->prepare("select id from users where login = ?");
+        $stmt->bindValue(1, $login, SQLITE3_TEXT);
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+        $id = $row[0];        
+
+        $db->close();
+
+        if(!empty($id))
+        {
+            return $id;
+        }
+        else
+        {
+            $msg = 'Login inexistente.';
+            throw new Exception("$msg");
+        }
+    }
+
+    public function checkLogin($passwd)
+    {
+        if (empty($passwd))
+        {
+            $msg = 'Informe uma senha para a verifica&ccedil;&atilde;o.';
+            throw new Exception("$msg");
+        }
+
+        if (empty($this->id))
+        {
+            $msg = 'Antes de checar a senha, carregue algum usu&aacute;rio com o m&eacute;todo load.';
+            throw new Exception("$msg");
+        }
+
+        $db = new SQLite3(parent::getDbFile());
+        $stmt = $db->prepare("select passwd from users where id = ?");
+        $stmt->bindValue(1, $this->id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_NUM);
+        $db->close();
+
+        $hash = $row[0];
+
+        if (!password_verify($passwd, $hash))
+        {
+            $msg = 'Dados inconsistentes.';
+            throw new Exception("$msg");
+        }
+    }
+
+    public function logout()
+    {
+        session_destroy();
+    }
+
     public function setPasswd($passwd)
     {
         if (!empty($passwd))

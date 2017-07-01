@@ -82,4 +82,5 @@ insert into settings ('setting','value') values ('interval','6');
 insert into settings ('setting','value') values ('log','/var/log/br.log');
 insert into settings ('setting','value') values ('csv','/tmp/out.csv');
 insert into settings ('setting','value') values ('assessment_tmp','/tmp/assessment.tmp');
+insert into users ('name','login','passwd') values ('Administrador','admin','$2y$10$WebrBL6B6eOV0yqo0gWbDekjC8sb/hBhWg3s2mMWdGPHDRzdfO64.'); -- senha 123
 insert into SQLITE_SEQUENCE ('name','seq') values ('faces',0);

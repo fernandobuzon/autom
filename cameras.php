@@ -1,3 +1,13 @@
+<?php
+
+session_start ();
+if (! isset ( $_SESSION ['level'] ))
+{
+    header ( 'location:login.php' );
+}
+
+?>
+
 <div class="row">
   <p><button type="button" class="btn btn-default" id="btnAdd" name="btnAdd" onclick="populate('cadCameras.php');">Nova c&acirc;mera</button>
 </div>

@@ -1,9 +1,13 @@
 <?php
+
+session_start ();
+if (! isset ( $_SESSION ['level'] ))
+{
+    header ( 'location:login.php' );
+}
+
 require_once('class.php');
 
-//session_start ();
-//if (! isset ( $_SESSION ['level'] ))
-//    header ( 'location:login.php' );
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +56,7 @@ require_once('class.php');
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="?page=home.php">Bootstrap</a>
+          <a class="navbar-brand" href="?page=home.php">Home</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -98,6 +102,14 @@ require_once('class.php');
               </ul>
             </li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown active">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION['login']; ?><span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#" onclick="logout();">Sair</a></li>
+              </ul>
+            </li>
+          </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -120,34 +132,34 @@ require_once('class.php');
     <script src="bootstrap-3.3.7/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
 
     <script>
-      function populate(page,onend) {
-        $.ajax({
-          type: 'GET',
-          url: page,
-        }).always(function() {
-          var r = arguments[1];
-          var body = arguments[0];
-          if(r == "success") {
-            $('#pageBox').html(body);
-            if(typeof(onend) != 'undefined') onend();
-          } else {
-            // mensagem de erro
-            var error = "<div class='alert alert-danger' role='alert'>Erro ao abrir arquivo: <strong>" + page + "</strong></div>";
-            $('#pageBox').html(error)
-          }
-        });
-      }
+    function populate(page,onend) {
+      $.ajax({
+        type: 'GET',
+        url: page,
+      }).always(function() {
+        var r = arguments[1];
+        var body = arguments[0];
+        if(r == "success") {
+          $('#pageBox').html(body);
+          if(typeof(onend) != 'undefined') onend();
+        } else {
+          // mensagem de erro
+          var error = "<div class='alert alert-danger' role='alert'>Erro ao abrir arquivo: <strong>" + page + "</strong></div>";
+          $('#pageBox').html(error)
+        }
+      });
+    }
 
-      <?php
-        if (empty($_GET['page']))
-        {
-            echo 'populate("home.php");';
-        }
-        else
-        {
-            echo 'populate("' . $_GET['page'] .'");';
-        }
-      ?>
+    <?php
+      if (empty($_GET['page']))
+      {
+          echo 'populate("home.php");';
+      }
+      else
+      {
+          echo 'populate("' . $_GET['page'] .'");';
+      }
+    ?>
 
     function cmd(cmd)
     {
@@ -185,7 +197,29 @@ require_once('class.php');
         });
     };
 
-</script>
+    function logout()
+    {
+        var r = confirm("Tem certeza que deseja Sair?");
+        if (r == true)
+        {
+            $.ajax({
+                url: 'logout.php',
+                success: function (data) {
+                    if (data === "")
+                    {
+                        window.location.href = 'login.php';
+                    }
+                    else
+                    {
+                        $('#pageBox').html("");
+                        $('#pageBox').append(data);
+                    }
+                }
+            });
+        }
+    };
+
+    </script>
 
   </body>
 </html>

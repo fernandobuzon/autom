@@ -1,5 +1,11 @@
 <?php
 
+session_start ();
+if (! isset ( $_SESSION ['level'] ))
+{
+    header ( 'location:login.php' );
+}
+
 require_once('class.php');
 
 $list = new settings($dbFile);

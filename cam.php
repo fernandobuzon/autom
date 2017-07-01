@@ -1,3 +1,13 @@
+<?php
+
+session_start ();
+if (! isset ( $_SESSION ['level'] ))
+{
+    header ( 'location:login.php' );
+}
+
+?>
+
 <div class="row">
     <center>
         <div id='area_take' name='area_take'>

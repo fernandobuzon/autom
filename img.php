@@ -1,5 +1,12 @@
 <?php
 
+session_start ();
+if (! isset ( $_SESSION ['level'] ))
+{
+    echo "Necess&aacute;rio autenticar-se!" . PHP_EOL;
+    die();
+}
+
 if (empty($_GET['id']) || empty($_GET['class']))
 {
     echo 'Especifique "id" e "class" via POST.';

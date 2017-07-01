@@ -1,3 +1,13 @@
+<?php
+
+session_start ();
+if (! isset ( $_SESSION ['level'] ))
+{
+    header ( 'location:login.php' );
+}
+
+?>
+
 <style>
 .hide-bullets {
   list-style:none;
