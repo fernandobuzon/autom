@@ -187,9 +187,16 @@ function add()
         type: 'POST',
         cache: false,
         success: function (data) {
-            $('#details').html("");
-            $('#pageBox').html("");
-            $('#pageBox').append(data);
+            if (data === "")
+            {
+                populate('cameras.php');
+            }
+            else
+            {
+                $('#details').html("");
+                $('#pageBox').html("");
+                $('#pageBox').append(data);
+            }
         }
     });
 };
@@ -244,9 +251,16 @@ function edit(id)
         type: 'POST',
         cache: false,
         success: function (data) {
-            $('#details').html("");
-            $('#pageBox').html("");
-            $('#pageBox').append(data);
+            if (data === "")
+            {
+                populate('cameras.php');
+            }
+            else
+            {
+                $('#details').html("");
+                $('#pageBox').html("");
+                $('#pageBox').append(data);
+            }
         }
     });
 };

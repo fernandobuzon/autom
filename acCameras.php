@@ -76,9 +76,8 @@ if ($action == 'add')
         die();
     }
 
-    $msg = 'C&acirc;mera ' . $name . ' adicionada com sucesso.';
-    notify::showMsg($msg,'success',$back);
-    die();
+    //$msg = 'C&acirc;mera ' . $name . ' adicionada com sucesso.';
+    //notify::showMsg($msg,'success',$back);
 }
 elseif ($action == 'del')
 {
@@ -104,9 +103,8 @@ elseif ($action == 'del')
         die();
     }
     
-    $msg = 'C&acirc;mera ' . $camera->getName($id) . ' removida com sucesso.';
-    notify::showMsg($msg,'success',$back);
-    die();
+    //$msg = 'C&acirc;mera ' . $camera->getName($id) . ' removida com sucesso.';
+    //notify::showMsg($msg,'success',$back);
 }
 elseif ($action == 'edit')
 {
@@ -160,8 +158,8 @@ elseif ($action == 'edit')
         $camera->setHue($_POST['hue']);
         $camera->save();
 
-        $msg = 'Dados atualizados com sucesso.';
-        notify::showMsg($msg,'success',$back);
+        //$msg = 'Dados atualizados com sucesso.';
+        //notify::showMsg($msg,'success',$back);
     }
     catch (Exception $e)
     {

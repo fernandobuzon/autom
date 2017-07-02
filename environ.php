@@ -130,6 +130,8 @@ function restart(prog)
         success: function (data) {
             $('#status').append(data);
             $('#title').html("<h1>Conclu&iacute;do!</h1>");
+            $('#start').attr('class', 'disabled');
+            $('#stop').attr('class', '');
         }
     });
 };

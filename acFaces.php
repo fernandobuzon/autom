@@ -9,6 +9,8 @@ if (! isset ( $_SESSION ['level'] ))
 
 require_once('class.php');
 
+$back = 'faces.php';
+
 if (empty($_POST['action']))
 {
     $msg = '&Eacute; necess&aacute;rio informar o par&acirc;metro "action" via POST.';
@@ -29,7 +31,6 @@ if ($action == 'add')
         die();
     }
 
-    $back = 'faces.php';
     $name = $_POST['name'];
     $image = $_POST['image'];
     $permissions = $_POST['permissions'];
@@ -52,9 +53,8 @@ if ($action == 'add')
         die();
     }
 
-    $msg = 'Face ' . $name . ' adicionada com sucesso.';
-    notify::showMsg($msg,'success',$back);
-    die();
+    //$msg = 'Face ' . $name . ' adicionada com sucesso.';
+    //notify::showMsg($msg,'success',$back);
 }
 elseif ($action == 'del')
 {
@@ -81,9 +81,8 @@ elseif ($action == 'del')
         die();
     }
     
-    $msg = 'Face ' . $face->getName($id) . ' removida com sucesso.';
-    notify::showMsg($msg,'success',$back);
-    die();
+    //$msg = 'Face ' . $face->getName($id) . ' removida com sucesso.';
+    //notify::showMsg($msg,'success',$back);
 }
 elseif ($action == 'edit')
 {
@@ -109,8 +108,8 @@ elseif ($action == 'edit')
         $face->setPermissions($permissions);
         $face->save();
 
-        $msg = 'Permiss&otilde;es atualizadas com sucesso.';
-        notify::showMsg($msg,'success',$back);
+        //$msg = 'Permiss&otilde;es atualizadas com sucesso.';
+        //notify::showMsg($msg,'success',$back);
     }
     catch (Exception $e)
     {

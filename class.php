@@ -108,20 +108,52 @@ class environ extends database
 
                 $content = null;
                 $content .= '# door_id: ' . $row['door_id'] . ' | camera_id: ' . $row['id'] . PHP_EOL;
-                $content .= 'v4l2_palette ' . $row['v4l2_palette'] . PHP_EOL;
-                $content .= 'norm ' . $row['norm'] . PHP_EOL;
-                $content .= 'width ' . $row['width'] . PHP_EOL;
-                $content .= 'height ' . $row['height'] . PHP_EOL;
-                $content .= 'framerate ' . $row['framerate'] . PHP_EOL;
-                $content .= 'minimum_frame_time ' . $row['minimum_frame_time'] . PHP_EOL;
-                $content .= 'netcam_url ' . $row['netcam_url'] . PHP_EOL;
-                $content .= 'netcam_userpass ' . $row['netcam_userpass'] . PHP_EOL;
-                $content .= 'netcam_keepalive ' . $row['netcam_keepalive'] . PHP_EOL;
-                $content .= 'auto_brightness ' . $row['auto_brightness'] . PHP_EOL;
-                $content .= 'brightness ' . $row['brightness'] . PHP_EOL;
-                $content .= 'contrast ' . $row['contrast'] . PHP_EOL;
-                $content .= 'saturation ' . $row['saturation'] . PHP_EOL;
-                $content .= 'hue ' . $row['hue'] . PHP_EOL;
+
+                if (!empty($row['v4l2_palette']))
+                    $content .= 'v4l2_palette ' . $row['v4l2_palette'] . PHP_EOL;
+
+                if (!empty($row['norm']))
+                    $content .= 'norm ' . $row['norm'] . PHP_EOL;
+
+                if (!empty($row['width']))
+                    $content .= 'width ' . $row['width'] . PHP_EOL;
+
+                if (!empty($row['height']))
+                    $content .= 'height ' . $row['height'] . PHP_EOL;
+
+                if (!empty($row['framerate']))
+                    $content .= 'framerate ' . $row['framerate'] . PHP_EOL;
+
+                if (!empty($row['minimum_frame_time']))
+                    $content .= 'minimum_frame_time ' . $row['minimum_frame_time'] . PHP_EOL;
+
+                if (!empty($row['netcam_url']))
+                    $content .= 'netcam_url ' . $row['netcam_url'] . PHP_EOL;
+
+                if (!empty($row['netcam_userpass']))
+                    $content .= 'netcam_userpass ' . $row['netcam_userpass'] . PHP_EOL;
+
+                if (empty($row['netcam_keepalive']))
+                    $content .= 'netcam_keepalive ' . 'off' . PHP_EOL;
+                else
+                    $content .= 'netcam_keepalive ' . 'on' . PHP_EOL;
+
+                if (empty($row['auto_brightness']))
+                    $content .= 'auto_brightness ' . 'off' . PHP_EOL;
+                else
+                    $content .= 'auto_brightness ' . 'on' . PHP_EOL;
+
+                if (!empty($row['brightness']))
+                    $content .= 'brightness ' . $row['brightness'] . PHP_EOL;
+
+                if (!empty($row['contrast']))
+                    $content .= 'contrast ' . $row['contrast'] . PHP_EOL;
+
+                if (!empty($row['saturation']))
+                    $content .= 'saturation ' . $row['saturation'] . PHP_EOL;
+
+                if (!empty($row['hue']))
+                    $content .= 'hue ' . $row['hue'] . PHP_EOL;
 
                 $file = "$conf_path/thread$i.conf";
                 file_put_contents($file, $content);
@@ -936,26 +968,26 @@ class cameras extends database
 
     public function setV4l2_palette($v4l2_palette)
     {
-        if (is_numeric($v4l2_palette))
+        if (is_numeric($v4l2_palette) && $v4l2_palette >= 0 && $v4l2_palette <= 17)
         {
             $this->v4l2_palette = $v4l2_palette;
         }
         else
         {
-            $msg = 'O valor "v4l2_palette" n&tilde;o pode ser vazio e deve ser num&eacute;rico.';
+            $msg = 'O valor "v4l2_palette" n&tilde;o pode ser vazio e deve ser entre 0 e 17.';
             throw new Exception("$msg");
         }
     }
 
     public function setNorm($norm)
     {
-        if (is_numeric($norm))
+        if ($norm == 0 || $norm == 1 || $norm == 2 || $norm == 3)
         {
             $this->norm = $norm;
         }
         else
         {
-            $msg = 'O valor "norm" n&tilde;o pode ser vazio e deve ser num&eacute;rico.';
+            $msg = 'O valor "norm" n&tilde;o pode ser vazio e deve ser: 0 (PAL), 1 (NTSC), 2 (SECAM), 3 (PAL NC no colour).';
             throw new Exception("$msg");
         }
     }
@@ -988,13 +1020,13 @@ class cameras extends database
 
     public function setFramerate($framerate)
     {
-        if (is_numeric($framerate))
+        if (is_numeric($framerate) && $framerate >= 2 && $framerate <= 100)
         {
             $this->framerate = $framerate;
         }
         else
         {
-            $msg = 'O valor "framerate" n&tilde;o pode ser vazio e deve ser num&eacute;rico.';
+            $msg = 'O valor "framerate" n&tilde;o pode ser vazio e deve ser entre 2 e 100.';
             throw new Exception("$msg");
         }
     }

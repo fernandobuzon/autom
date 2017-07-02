@@ -214,9 +214,16 @@ function del(id)
             type: 'POST',
             cache: false,
             success: function (data) {
-                $('#details').html("");
-                $('#pageBox').html("");
-                $('#pageBox').append(data);
+                if (data === "")
+                {
+                    populate('faces.php');
+                }
+                else
+                {
+                    $('#details').html("");
+                    $('#pageBox').html("");
+                    $('#pageBox').append(data);
+                }
             }
         });
     }

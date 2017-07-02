@@ -51,9 +51,8 @@ if ($action == 'add')
         die();
     }
 
-    $msg = 'Porta ' . $name . ' adicionada com sucesso.';
-    notify::showMsg($msg,'success',$back);
-    die();
+    //$msg = 'Porta ' . $name . ' adicionada com sucesso.';
+    //notify::showMsg($msg,'success',$back);
 }
 elseif ($action == 'del')
 {
@@ -80,9 +79,8 @@ elseif ($action == 'del')
         die();
     }
     
-    $msg = 'Porta ' . $door->getName($id) . ' removida com sucesso.';
-    notify::showMsg($msg,'success',$back);
-    die();
+    //$msg = 'Porta ' . $door->getName($id) . ' removida com sucesso.';
+    //notify::showMsg($msg,'success',$back);
 }
 elseif ($action == 'edit')
 {
@@ -108,8 +106,8 @@ elseif ($action == 'edit')
         $door->setCameras($cameras);
         $door->save();
 
-        $msg = 'Dados atualizados com sucesso.';
-        notify::showMsg($msg,'success',$back);
+        //$msg = 'Dados atualizados com sucesso.';
+        //notify::showMsg($msg,'success',$back);
     }
     catch (Exception $e)
     {

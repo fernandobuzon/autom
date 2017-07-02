@@ -58,9 +58,8 @@ if ($action == 'add')
         die();
     }
 
-    $msg = 'Usu&aacute;rio ' . $name . ' adicionado com sucesso.';
-    notify::showMsg($msg,'success',$back);
-    die();
+    //$msg = 'Usu&aacute;rio ' . $name . ' adicionado com sucesso.';
+    //notify::showMsg($msg,'success',$back);
 }
 elseif ($action == 'del')
 {
@@ -87,9 +86,8 @@ elseif ($action == 'del')
         die();
     }
     
-    $msg = 'Usu&aacute;rio ' . $user->getName() . ' removido com sucesso.';
-    notify::showMsg($msg,'success',$back);
-    die();
+    //$msg = 'Usu&aacute;rio ' . $user->getName() . ' removido com sucesso.';
+    //notify::showMsg($msg,'success',$back);
 }
 elseif ($action == 'edit')
 {
@@ -126,8 +124,8 @@ elseif ($action == 'edit')
             $user->setLogin($login);
             $user->save();
 
-            $msg = 'Usu&aacute;rio modificado com sucesso. Senha atualizada.';
-            notify::showMsg($msg,'success',$back);
+            //$msg = 'Usu&aacute;rio modificado com sucesso. Senha atualizada.';
+            //notify::showMsg($msg,'success',$back);
         }
         else
         {
@@ -137,13 +135,13 @@ elseif ($action == 'edit')
                 $user->setLogin($login);
                 $user->save();
 
-                $msg = 'Usu&aacute;rio modificado com sucesso (Senha atual mantida).';
-                notify::showMsg($msg,'success',$back);
+                //$msg = 'Usu&aacute;rio modificado com sucesso (Senha atual mantida).';
+                //notify::showMsg($msg,'success',$back);
             }
             else
             {
-                $msg = 'Nenhuma modifica&ccedil;&atilde;o detectada.';
-                notify::showMsg($msg,'success',$back);
+                //$msg = 'Nenhuma modifica&ccedil;&atilde;o detectada.';
+                //notify::showMsg($msg,'success',$back);
             }
         }
     }

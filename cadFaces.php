@@ -283,9 +283,16 @@ function edit(id)
         type: 'POST',
         cache: false,
         success: function (data) {
-            $('#details').html("");
-            $('#pageBox').html("");
-            $('#pageBox').append(data);
+            if (data === "")
+            {
+                populate('faces.php');
+            }
+            else
+            {
+                $('#details').html("");
+                $('#pageBox').html("");
+                $('#pageBox').append(data);
+            }
         }
     });
 };
@@ -321,37 +328,18 @@ function add()
         type: 'POST',
         cache: false,
         success: function (data) {
-            $('#details').html("");
-            $('#pageBox').html("");
-            $('#pageBox').append(data);
-        }
-    });
-};
-
-function del(id)
-{
-    var r = confirm("Tem certeza que deseja remover o id nr: " + id);
-    if (r == true)
-    {
-        var form;
-        form = new FormData();
-        form.append('action', 'del');
-        form.append('id', id);
-
-        $.ajax({
-            url: 'acFaces.php',
-            data: form,
-            processData: false,
-            contentType: false,
-            type: 'POST',
-            cache: false,
-            success: function (data) {
+            if (data === "")
+            {
+                populate('faces.php');
+            }
+            else
+            {
                 $('#details').html("");
                 $('#pageBox').html("");
                 $('#pageBox').append(data);
             }
-        });
-    }
+        }
+    });
 };
 
 document.getElementById('newimage').setAttribute('src', $('#transfer').val());
