@@ -27,6 +27,7 @@ if (! isset ( $_SESSION ['level'] ))
 </form>
 
 <script>
+
         function userMedia(){
             return navigator.getUserMedia = navigator.getUserMedia ||
             navigator.webkitGetUserMedia ||
